@@ -22,7 +22,6 @@
     let selectButt;
 
     let closest = 0;
-    let selectedCircle = null;
 
     let fullyLoaded = false;
 
@@ -50,7 +49,6 @@
 
     $: x = d3  
         .scaleLinear()
-        //.domain(d3.extent(data, (d) => d.order))
         .domain([0, 1100])
         .range([marginLeft, width - marginRight]);
     $: y = d3  
@@ -71,7 +69,7 @@
         const [xValue, yValue] = d3.pointer(event);
 
         closest = findClosestCircle([xValue, yValue]);
-
+        
         tooltipPt = dataFilter[closest];
     }
 
@@ -83,63 +81,57 @@
     //filtering
     function update(selectedType) {
         if (!fullyLoaded) { return; }
-
         dataFilter = [];
+        positionFilter.length = 0;
         
         // Create new data with the selection
         for (let i = 0; i < data.length; i++) {
-                //handle if they contain the type
-                if (selectedType ==="all") {
-                    dataFilter.push({
-                        name: data[i].name,
-                        bst: data[i].bst,
-                        type1: data[i].type1,
-                        type2: data[i].type2,
-                        order: data[i].order,
-                        sprite: data[i].sprite,
-                    })
-                }
-                else if (containsType(data[i], selectedType)){
-                    dataFilter.push({
-                        name: data[i].name,
-                        bst: data[i].bst,
-                        type1: data[i].type1,
-                        type2: data[i].type2,
-                        order: data[i].order,
-                        sprite: data[i].sprite,
-                    })
-                }
+            //handle if they contain the type
+            if (selectedType ==="all") {
+                dataFilter.push({
+                    name: data[i].name,
+                    bst: data[i].bst,
+                    type1: data[i].type1,
+                    type2: data[i].type2,
+                    order: data[i].order,
+                    sprite: data[i].sprite,
+                })
             }
-        
+            else if (containsType(data[i], selectedType)){
+                dataFilter.push({
+                    name: data[i].name,
+                    bst: data[i].bst,
+                    type1: data[i].type1,
+                    type2: data[i].type2,
+                    order: data[i].order,
+                    sprite: data[i].sprite,
+                })
+            }
+        }
         //delete all circles
         d3.select(circles).selectAll("*").remove();
-        createCircles();
-    }
-
-    function createCircles() {
-        positionFilter = [];
+        //put them back
         for (let i = 0; i < dataFilter.length; i++) {
             d3.select(circles).append("circle")
-                .attr("id", "")
                 .attr("key", dataFilter[i].order)
                 .attr("cx", x(dataFilter[i].order))
                 .attr("cy", y(dataFilter[i].bst))
                 .attr("fill", color[dataFilter[i].type1])
-                .attr("r", 2.5)
+                .attr("r", 2.5);
+
             positionFilter.push({
                 cx: x(dataFilter[i].order),
                 cy: y(dataFilter[i].bst),
             });
         }
-
         currCircles = Array.from(d3.select(circles).selectAll("circle"));
-        
     }
 
     function findClosestCircle(mousePosition) {
         const [mx, my] = mousePosition;
         let closestCircle = null;
         let minDistance = Infinity;
+        
         for (let i = 0; i < positionFilter.length; i++) {
             const cx = positionFilter[i]["cx"];
             const cy = positionFilter[i]["cy"];
@@ -179,12 +171,13 @@
     var allTypes = ["all", "normal", "fighting", "flying", "poison", "ground", "rock", "bug", "ghost", "steel", "fire", "water", "grass", "electric", "psychic", "ice", "dragon", "dark", "fairy"]
 
     $: d3.select(selectButt)
-      .selectAll('myOptions')
-     	.data(allTypes)
-      .enter()
-    	.append('option')
-      .text(function (d) { return d; }) // text showed in the menu
-      .attr("value", function (d) { return d; })
+        .attr("id", "dropdown")
+        .selectAll('myOptions')
+            .data(allTypes)
+        .enter()
+            .append('option')
+        .text(function (d) { return d; }) // text showed in the menu
+        .attr("value", function (d) { return d; })
 
     $: d3.select(selectButt).on("change", function(d) {
         // recover the option that has been chosen
@@ -192,7 +185,18 @@
         // run the updateChart function with this selected option
         update(selectedOption)
     })
-    
+
+    function firstLoad() {
+        if(fullyLoaded) { return; }
+        for (let i = 0; i < data.length; i++) {
+            positionFilter.push({
+                cx: x(data[i].order),
+                cy: y(data[i].bst),
+            });
+        }
+        currCircles = Array.from(d3.select(circles).selectAll("circle"));
+        fullyLoaded = true;
+    }
 
 </script>
 
@@ -215,22 +219,17 @@
     <g bind:this={circles} stroke="#000" stroke-opacity="0.2">
         {#each data as d, i}
             <circle 
-                id=""
                 key={d.order} 
                 cx={x(d.order)} 
                 cy={y(d.bst)} 
                 fill={color[d.type1]} 
                 r="2.5"
                 />
-            {positionFilter.push({
-                cx: x(d.order),
-                cy: y(d.bst),
-            })}
             {#if i === data.length-1}
-                {currCircles = Array.from(d3.select(circles).selectAll("circle"))}
-                {fullyLoaded = true}
+                {firstLoad()}
             {/if}
         {/each}
+        
     </g>
     {#if tooltipPt}
         <g transform="translate({x(tooltipPt.order)},{y(tooltipPt.bst)})">
@@ -268,17 +267,26 @@
     
     
     </svg>
+    <p>
+        All projects where I'm given free reign, I focus on whatever I'm interested in. 
+        This makes projects more fun and so I put in a little more effort. 
+        In this case, I've been playing a lot of <a href="https://pokerogue.net" target="_blank">PokeRogue</a>, a rogue-like Pokemon fan game you can play in your browser
+
+    </p>
 </div>
 
 <style>
-    @import url('https://fonts.cdnfonts.com/css/pokemon-solid');
+    @import url('https://fonts.cdnfonts.com/css/sf-pixelate');
 
-    .axis-Title {
-        font-weight: bold;
+
+    .axis-Title, text, p {
+        font-family: 'SF Pixelate', sans-serif;
     }
 
     svg {
         text-align: center;
     }
+
+    
 
 </style>
