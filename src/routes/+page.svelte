@@ -13,9 +13,6 @@
         const poke = await res.json();
 
             //save into long dataset
-
-        // let tempRes = await fetch(poke.results[2].url)
-        // let tempPoke = await tempRes.json()
         
         for (let i = 0; i < poke.results.length; i++) {
             let tempRes = await fetch(poke.results[i].url)
@@ -61,4 +58,12 @@
     <h1>Pokémon Base Stats and National Dex Trend</h1>
     <PokeAPI {data}/>
 </main>
+
+<style>
+    @import url('https://fonts.cdnfonts.com/css/pokemon-solid');
+    h1 {
+        font-family: 'Pokemon Solid', sans-serif;
+        text-align: center;
+    }
+</style>
 
