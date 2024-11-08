@@ -51,7 +51,7 @@
     $: x = d3  
         .scaleLinear()
         //.domain(d3.extent(data, (d) => d.order))
-        .domain([0, 1200])
+        .domain([0, 1100])
         .range([marginLeft, width - marginRight]);
     $: y = d3  
         .scaleLinear()
@@ -89,7 +89,7 @@
         // Create new data with the selection
         for (let i = 0; i < data.length; i++) {
                 //handle if they contain the type
-                if (selectedType ==="any") {
+                if (selectedType ==="all") {
                     dataFilter.push({
                         name: data[i].name,
                         bst: data[i].bst,
@@ -176,7 +176,7 @@
         
     }
 
-    var allTypes = ["any", "normal", "fighting", "flying", "poison", "ground", "rock", "bug", "ghost", "steel", "fire", "water", "grass", "electric", "psychic", "ice", "dragon", "dark", "fairy"]
+    var allTypes = ["all", "normal", "fighting", "flying", "poison", "ground", "rock", "bug", "ghost", "steel", "fire", "water", "grass", "electric", "psychic", "ice", "dragon", "dark", "fairy"]
 
     $: d3.select(selectButt)
       .selectAll('myOptions')
@@ -209,7 +209,7 @@
     <g bind:this={gx} transform="translate(0, {height - marginBottom})"></g>
     <g bind:this={gy} transform="translate({marginLeft},0)"></g>
 
-    <text class="axis-Title" text-anchor="end" x={width-marginRight} y={height-55}>Order</text>
+    <text class="axis-Title" text-anchor="end" x={width-marginRight} y={height-55}>ID</text>
     <text class="axis-Title" text-anchor="end" transform="rotate(-90)" x={marginTop-40} y={marginLeft-40}>Base Stat Total</text>
 
     <g bind:this={circles} stroke="#000" stroke-opacity="0.2">
@@ -260,7 +260,7 @@
         </g>
         <g transform="translate(300,160)">
             <text font-weight="bold">
-                Order: {tooltipPt.order}
+                ID: {tooltipPt.order}
             </text>
         </g>
     {/if}

@@ -30,7 +30,7 @@
                     bst: tempPoke.stats[0].base_stat + tempPoke.stats[1].base_stat + tempPoke.stats[2].base_stat + tempPoke.stats[3].base_stat + tempPoke.stats[4].base_stat + tempPoke.stats[5].base_stat, 
                     type1: tempPoke.types[0].type.name,
                     type2: 'none',
-                    order: tempPoke.order,
+                    order: tempPoke.id,
                     sprite: tempPoke.sprites.front_default,
                     })
                 }
@@ -40,7 +40,7 @@
                     bst: tempPoke.stats[0].base_stat + tempPoke.stats[1].base_stat + tempPoke.stats[2].base_stat + tempPoke.stats[3].base_stat + tempPoke.stats[4].base_stat + tempPoke.stats[5].base_stat, 
                     type1: tempPoke.types[0].type.name,
                     type2: tempPoke.types[1].type.name,
-                    order: tempPoke.order,
+                    order: tempPoke.id,
                     sprite: tempPoke.sprites.front_default,
                     })
                 }
