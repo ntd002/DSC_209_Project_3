@@ -333,7 +333,6 @@
 <style>
     @import url('https://fonts.cdnfonts.com/css/sf-pixelate');
 
-
     .axis-Title, text, p {
         font-family: 'SF Pixelate', sans-serif;
     }
