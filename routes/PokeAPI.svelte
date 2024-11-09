@@ -327,6 +327,7 @@
         If I had more time, I would work on getting those fonts figured out. Add some color, patterns, or even images to the background. 
         Definitey color the title to be like the Pokémon logo more. Maybe implement a click function so you can compare Pokémon. 
         However, I am satisfied with and proud of this product.
+
     </p>
 </div>
 
